@@ -1,0 +1,13 @@
+node_modules/
+node_modules.install-failed/
+node_modules.stale/
+.vinext/
+.wrangler/
+dist/
+.next/
+out/
+.sites/
+contracts/__pycache__/
+*.pyc
+.env
+.env.*

@@ -20,4 +20,4 @@ npm test
 npm run dev
 ```
 
-Deploy `contracts/quote_court_v2.py` in GenLayer Studio, then enter that exact contract address in the app before registering a procurement request. The public CI runs integrity, adversarial lifecycle, frontend-finality, static-build, and Pages-deployment checks.
+Deploy `contracts/quote_court_v2.py` in GenLayer Studio, then enter that exact contract address in the app before registering a procurement request. The current source-matched Studionet v2 deployment is [`0x72F669a824FC566146A83BF8d32E33eEa916CB6a`](https://explorer-studio.genlayer.com/address/0x72F669a824FC566146A83BF8d32E33eEa916CB6a). The public CI runs integrity, adversarial lifecycle, frontend-finality, static-build, and Pages-deployment checks.

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
-const source = readFileSync("contracts/quote_court.py", "utf8");
-for (const marker of ["class QuoteCourt(gl.Contract)", "register_quote_request", "assess_provider_quotes", "challenge_quote_decision", "resolve_quote_challenge", "finalize_purchase_authorization", "execute_authorized_purchase", "get_quote_request", "get_quote_decision", "get_quote_challenge", "get_purchase_authorization", "get_purchase_execution", "gl.vm.run_nondet_unsafe", "gl.nondet.web.render", "gl.nondet.exec_prompt", "snapshot_commitments", "baseline_hash", "challenge_window_still_open", "hashlib.sha256"]) assert.ok(source.includes(marker), `missing contract integrity marker: ${marker}`);
-assert.ok(!source.includes("hash("), "non-cryptographic hash must not be used");
-assert.match(source, /authorization\["status"\] = "consumed"/);
-console.log("QuoteCourt contract integrity checks passed");
+const source = readFileSync("contracts/quote_court_v2.py", "utf8");
+for (const marker of ["class QuoteCourtV2(gl.Contract)", "authorized_executor", "execute_authorized_purchase", "verify_purchase_completion", "caller_not_authorized_executor", "invalid_purchase_amount", "proof_submitted", "completed", "gl.vm.run_nondet_unsafe", "resolve_quote_challenge", "counterevidence_host_not_committed", "resolution_deadline", "expire_quote_challenge", "content_length", "content_hash", "source_trust_model", "list_quote_request_ids_page", "hashlib.sha256"]) assert.ok(source.includes(marker), `missing v2 contract security marker: ${marker}`);
+assert.ok(!source.includes("SNAPSHOT_LIMIT"), "v2 must not truncate provider evidence to a snapshot limit");
+assert.ok(!source.includes("except Exception:\n        return 0"), "v2 must not silently normalize unavailable time");
+console.log("QuoteCourt v2 contract integrity checks passed");

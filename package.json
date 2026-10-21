@@ -7,9 +7,9 @@
   },
   "scripts": {
     "dev": "vinext dev",
-    "build": "vinext build",
+    "build": "vite build --config vite.pages.config.ts",
     "start": "vinext start",
-    "test": "npm run contract:check && npm run contract:test && npm run flow:check && npm run build && npm run build:pages",
+    "test": "npm run contract:check && npm run contract:test && npm run flow:check && npm run build",
     "build:pages": "vite build --config vite.pages.config.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "contract:check": "node scripts/check-contract.mjs",

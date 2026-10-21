@@ -1,16 +1,16 @@
 # QuoteCourt for GenLayer
 
-QuoteCourt is a consensus procurement gate for AI agents and teams. It compares two source-bound provider quotes against a stored purchase policy and spend cap, then produces an on-chain authorization that a purchase executor must consume exactly once.
+QuoteCourt v2 is a consensus procurement gate for AI agents and teams. It compares independently reproduced provider quotes against a stored purchase policy and spend cap, then creates an executor-bound authorization. A submitted purchase proof is not treated as completed until a separate consensus verification writes the completed receipt.
 
 ## Workflow
 
-1. `register_quote_request` commits the purchase intent, selection policy, budget, provider quote URLs, and a real challenge window as canonical SHA-256 source snapshots.
-2. `assess_provider_quotes` has validators independently re-render both provider sources and issue a `qdc_*` consensus decision tied to a `qte_*` request.
-3. `challenge_quote_decision` and `resolve_quote_challenge` admit counterevidence during the stored window and preserve an auditable challenge record.
-4. `finalize_purchase_authorization` creates a `qau_*` receipt only for the selected provider and capped amount.
-5. `execute_authorized_purchase` rejects an expired, reused, mismatched-provider, or over-budget receipt and returns a one-time `qex_*` execution record.
+1. `register_quote_request` commits the requester, authorized executor, currency, quantity, budget, quote URLs, full-content SHA-256 commitments, and challenge window.
+2. `assess_provider_quotes` makes validators independently re-render all sources and rejects incomplete, changed, malformed, or uncommitted evidence.
+3. `challenge_quote_decision` is requester-only and accepts evidence only from committed provider hosts. `resolve_quote_challenge` runs inside a validator-checked nondeterministic consensus block; `expire_quote_challenge` recovers a stalled dispute.
+4. `finalize_purchase_authorization` creates a time-limited `qau_*` receipt for one executor, provider, amount, currency, and quantity.
+5. `execute_authorized_purchase` only submits authenticated, positive-amount proof from that executor. `verify_purchase_completion` separately verifies that proof before changing status to `completed`.
 
-Every consequential record uses canonical JSON and collision-resistant SHA-256 commitments. The app writes directly to the Studio contract, waits for consensus acceptance, extracts returned IDs, and reads records back on-chain.
+Every consequential record uses canonical JSON and collision-resistant SHA-256 commitments. The app waits for finalized consensus, checks `FINISHED_WITH_RETURN`, and reads the exact record back from the selected Studio contract before showing success. Public HTTPS evidence is an explicitly disclosed trust boundary, not merchant identity verification.
 
 ## Run locally
 
@@ -20,4 +20,4 @@ npm test
 npm run dev
 ```
 
-Deploy `contracts/quote_court.py` in GenLayer Studio, then enter that contract address in the app before registering a procurement request.
+Deploy `contracts/quote_court_v2.py` in GenLayer Studio, then enter that exact contract address in the app before registering a procurement request. The public CI runs integrity, adversarial lifecycle, frontend-finality, static-build, and Pages-deployment checks.
